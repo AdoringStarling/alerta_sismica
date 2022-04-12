@@ -178,7 +178,7 @@ def var_un(x_pozo_inv_kale, y_pozo_inv_kale,h_pozo_inv_kale_m,sismos,nam,wgs84):
                     (sismos['ESTE']>=xw)&
                     (sismos['NORTE']<=yn)&
                     (sismos['ESTE']>=ys)]
-    return kale,nam,geo_inv,cyl1,bcircles1,cyl2,bcircles2,cyl3,bcircles3,sismos_total,sismos_local,Mc,ND,mn,nmsod_mn,npseod_mn,d_mn,x_pozo_inv_kale,y_pozo_inv_kale,r1,r_ext,gw,ge,gs,gn
+    return kale,nam,geo_inv,cyl1,bcircles1,cyl2,bcircles2,cyl3,bcircles3,sismos_total,sismos_local,ND,mn,nmsod_mn,npseod_mn,d_mn,x_pozo_inv_kale,y_pozo_inv_kale
 
 def table_semaforo(sismos_dia,nmsod_mn,npseod_mn,d_mn,Mc,x_pozo_inv_kale,y_pozo_inv_kale,r1):
     m0d = sismos_dia[(sismos_dia['MAGNITUD']<Mc)]
