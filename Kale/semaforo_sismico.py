@@ -1,3 +1,4 @@
+import pandas as pd
 from geoseismo_sem import *
 import dash
 import dash_bootstrap_components as dbc
@@ -59,6 +60,8 @@ h_pozo_iny_kale_m = 2618.232#m
 kale2,nam2,geo_inv2,cyl12,bcircles12,cyl22,bcircles22,cyl32,bcircles32,sismos_total2,sismos_local2,Mc2,ND2,mn2,nmsod_mn2,npseod_mn2,d_mn2,x_pozo_inv_kale2,y_pozo_inv_kale2,r12,r_ext2,gw2,ge2,gs2,gn2=var_un(x_pozo_inv_kale, y_pozo_inv_kale,h_pozo_inv_kale_m,sismos,'PPII Kalé - Investigación',wgs84)
 kale1,nam1,geo_inv1,cyl11,bcircles11,cyl21,bcircles21,cyl31,bcircles31,sismos_total1,sismos_local1,Mc1,ND1,mn1,nmsod_mn1,npseod_mn1,d_mn1,x_pozo_inv_kale1,y_pozo_inv_kale1,r11,r_ext1,gw1,ge1,gs1,gn1=var_un(x_pozo_iny_kale, y_pozo_iny_kale,h_pozo_iny_kale_m,sismos,'PPII Kalé - Inyector',wgs84)
  
+# -74.32929781241609 -73.384852230196 6.893917274978344 7.836724863369543
+
 #Se cargan los datos de elevacion estos fueron descargados en https://portal.opentopography.org/datasets
 # Global Bathymetry and Topography at 15 Arc Sec: SRTM15+ V2.1  
 df_topo =pd.read_csv('datasets\kale_100.xyz',delimiter=' ',header=None,decimal='.')
@@ -268,7 +271,7 @@ def update_output(pozo,Fecha,Hora,Minuto,Segundo,n_clicks):
         #         riv=df_rivers[df_rivers['DRENAJE']==i]
         #         fig.add_trace(go.Scatter3d(z=riv['Z'], x=riv['X'], y=riv['Y'],mode='markers',
         #         name=str(i),marker_symbol='square',marker=dict(color='aqua',size=2)))
-        if len(sismos_dia)>0:
+        if len(sismos_dia_t)>0:
 
                     sismos_1 = go.Scatter3d(
                         x = sismos_dia_t['LONGITUD (°)'],
@@ -342,8 +345,8 @@ def update_output(pozo,Fecha,Hora,Minuto,Segundo,n_clicks):
             ))]))
         fig.update_layout(
         scene = dict(aspectratio=dict(x=52,y=52,z=38),
-                xaxis = dict(title='X',nticks=10, range=[gw,ge]),
-                yaxis = dict(title='Y',nticks=10, range=[gs,gn],),
+                xaxis = dict(title='X',nticks=10, range=[gw2,ge2]),
+                yaxis = dict(title='Y',nticks=10, range=[gs2,gn2],),
                 zaxis = dict(title='Elevación(msnm)',nticks=10, range=[-32000,6000],),),)
         fig.update_traces(showlegend=False)
         return fig

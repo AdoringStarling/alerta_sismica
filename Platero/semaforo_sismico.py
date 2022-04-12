@@ -58,10 +58,12 @@ x_pozo_iny_kale, y_pozo_iny_kale  = 4901300, 2359950
 h_pozo_iny_kale_m = 2325.6#m
 
 kale2,nam2,geo_inv2,cyl12,bcircles12,cyl22,bcircles22,cyl32,bcircles32,sismos_total2,sismos_local2,Mc2,ND2,mn2,nmsod_mn2,npseod_mn2,d_mn2,x_pozo_inv_kale2,y_pozo_inv_kale2,r12,r_ext2,gw2,ge2,gs2,gn2=var_un(x_pozo_inv_kale, y_pozo_inv_kale,h_pozo_inv_kale_m,sismos,'PPII Platero - Investigación',wgs84)
-# print(gw2,ge2,gs2,gn2)
+
 kale1,nam1,geo_inv1,cyl11,bcircles11,cyl21,bcircles21,cyl31,bcircles31,sismos_total1,sismos_local1,Mc1,ND1,mn1,nmsod_mn1,npseod_mn1,d_mn1,x_pozo_inv_kale1,y_pozo_inv_kale1,r11,r_ext1,gw1,ge1,gs1,gn1=var_un(x_pozo_iny_kale, y_pozo_iny_kale,h_pozo_iny_kale_m,sismos,'PPII Platero - Inyector',wgs84)
 
-# print(sismos_local1)
+
+#-74.36650535401542 -73.42224562649486 6.785608789773128 7.728462519239822
+
 #Se cargan los datos de elevacion estos fueron descargados en https://portal.opentopography.org/datasets
 # Global Bathymetry and Topography at 15 Arc Sec: SRTM15+ V2.1  
 df_topo =pd.read_csv('datasets\platero_100.xyz',delimiter=' ',header=None,decimal='.')
@@ -252,18 +254,20 @@ def update_output(pozo,Fecha,Hora,Minuto,Segundo,n_clicks):
         Minuto=str(Minuto)
         Segundo=str(Segundo)
         date=str(Fecha)+' '+Hora+':'+Minuto+':'+Segundo
-        df,col,sum,sismos_dia,sismos_mes=semaforo_sismico(sismos_local,Mc,ND,mn,
-                        nmsod_mn,npseod_mn,d_mn,x_pozo_inv_kale,y_pozo_inv_kale,r1,r_ext,date)
+        # df,col,sum,sismos_dia,sismos_mes=semaforo_sismico(sismos_local,Mc,ND,mn,
+        #                 nmsod_mn,npseod_mn,d_mn,x_pozo_inv_kale,y_pozo_inv_kale,r1,r_ext,date)
         
         time=pd.to_datetime(date)
         sismos_dia_t = sismos_total[(sismos_total['UTC']<=time)&(sismos_total['UTC']>=time- timedelta(hours=24))]
         sismos_mes_t = sismos_total[(sismos_total['UTC']<=time)&(sismos_total['UTC']>=time- timedelta(days=30))]
+        
         if n_clicks==0:
             pass
         elif n_clicks % 2!=0:
             sismos_dia_t=sismos_mes_t
         else:
             pass
+
         #Elaboramos la grafica con los datos siendo la variables anteriores
         layout = go.Layout(scene_xaxis_visible=True, scene_yaxis_visible=True, scene_zaxis_visible=True)
         fig = go.Figure(data=[cyl1, bcircles1,cyl2, bcircles2,cyl3, bcircles3, ], layout=layout)
@@ -271,7 +275,7 @@ def update_output(pozo,Fecha,Hora,Minuto,Segundo,n_clicks):
         #         riv=df_rivers[df_rivers['DRENAJE']==i]
         #         fig.add_trace(go.Scatter3d(z=riv['Z'], x=riv['X'], y=riv['Y'],mode='markers',
         #         name=str(i),marker_symbol='square',marker=dict(color='aqua',size=2)))
-        if len(sismos_dia)>0:
+        if len(sismos_dia_t)>0:
 
                     sismos_1 = go.Scatter3d(
                         x = sismos_dia_t['LONGITUD (°)'],
@@ -345,8 +349,8 @@ def update_output(pozo,Fecha,Hora,Minuto,Segundo,n_clicks):
             ))]))
         fig.update_layout(
         scene = dict(aspectratio=dict(x=52,y=52,z=38),
-                xaxis = dict(title='X',nticks=10, range=[gw,ge]),
-                yaxis = dict(title='Y',nticks=10, range=[gs,gn],),
+                xaxis = dict(title='X',nticks=10, range=[gw2,ge2]),
+                yaxis = dict(title='Y',nticks=10, range=[gs2,gn2],),
                 zaxis = dict(title='Elevación(msnm)',nticks=10, range=[-32000,6000],),),)
         fig.update_traces(showlegend=False)
         return fig
