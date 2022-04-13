@@ -90,7 +90,7 @@ df_topo =pd.read_csv('datasets\local_100m.xyz',delimiter=' ',header=None,decimal
 mesh_topo = (df_topo.pivot(index=1, columns=0,values=2))
 z_topo,x_topo,y_topo=mesh_topo.values,mesh_topo.columns,mesh_topo.index
 
-
+df_rivers=pd.read_csv('datasets/drenajes_gmrt_WGS84_locales.csv',delimiter=',',decimal='.')
 
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SUPERHERO])
@@ -300,6 +300,10 @@ def update_output(pozo,Fecha,Hora,Minuto,Segundo,n_clicks):
         #         riv=df_rivers[df_rivers['DRENAJE']==i]
         #         fig.add_trace(go.Scatter3d(z=riv['Z'], x=riv['X'], y=riv['Y'],mode='markers',
         #         name=str(i),marker_symbol='square',marker=dict(color='aqua',size=2)))
+        for i in df_rivers['COD_UC'].unique():
+                riv=df_rivers[df_rivers['COD_UC']==i]
+                fig.add_trace(go.Scatter3d(z=riv['Z'], x=riv['X'], y=riv['Y'],mode='markers',
+                name=str(i),marker_symbol='square',marker=dict(color='aqua',size=2)))
         if len(sismos_dia_t)>0:
 
                     sismos_1 = go.Scatter3d(
