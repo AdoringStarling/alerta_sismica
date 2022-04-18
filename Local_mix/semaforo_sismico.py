@@ -10,20 +10,20 @@ import pyproj
 
 white_button_style = {'background-color': 'white',
                       'color': 'black',
-                      'height': '50px',
-                      'width': '100px',}
+                      'height': '60px',
+                      'width': '300px',}
 
 red_button_style = {'background-color': 'red',
                     'color': 'white',
-                    'height': '50px',
-                    'width': '100px',}
+                    'height': '60px',
+                    'width': '300px',}
 
 #metricas a WGS84
 wgs84 = pyproj.Transformer.from_crs("epsg:9377", "epsg:4326")
 #WGS84 A Metricas
 magnas = pyproj.Transformer.from_crs("epsg:4326", "epsg:9377")
 
-sismos = pd.read_csv(r'datasets\reporte_LBG_2.csv')
+sismos = pd.read_csv(r'datasets\reporte_LBG.csv')
 sismos['FECHA - HORA UTC']=sismos['Fecha  (UTC)'].astype(str)+' '+sismos['Hora  (UTC)'].astype(str)
 sismos.rename(columns = {'Latitud(°)':'LATITUD (°)', 
                         'Longitud(°)':'LONGITUD (°)',
@@ -38,7 +38,7 @@ sismos.rename(columns = {'Latitud(°)':'LATITUD (°)',
                         inplace = True)
 sismos.drop(['Fecha  (UTC)','Hora  (UTC)'],axis=1,inplace=True)
 dfp=magnas.transform(sismos['LATITUD (°)'], sismos['LONGITUD (°)'])
-sismos['ESTE']=dfp[1]
+sismos['ESTE'] =dfp[1]
 sismos['NORTE']=dfp[0]
 sismos['UTC']=pd.to_datetime(sismos['FECHA - HORA UTC'])
 cey=wgs84.transform(sismos['NORTE']+(sismos['ERROR LATITUD (Km)']*1000),sismos['ESTE'])[0]
@@ -111,7 +111,7 @@ card_main=dbc.Card(
                         style={'color': 'black'},
                         options=[
                             {'label': 'Kalé - Investigación', 'value': 'KINV'},
-                            {'label': 'kalé - Inyector', 'value': 'KINY'},
+                            {'label': 'Kalé - Inyector', 'value': 'KINY'},
                             {'label': 'Platero - Investigación', 'value': 'PINV'},
                             {'label': 'Platero - Inyector', 'value': 'PINY'},
                             
@@ -160,7 +160,7 @@ card_main=dbc.Card(
                 ),
                 html.H6(f"Ultimo sismos registrado : {str(sismos['UTC'].max())}"),
                 html.Button(id='button',
-                children='Mensual',
+                children='Sismicidad acumulada mensual (30 días previos) ',
                 n_clicks=0,
                 style=white_button_style),  
                 html.H4(id='Alert'),
