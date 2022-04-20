@@ -18,6 +18,40 @@ red_button_style = {'background-color': 'red',
                     'height': '60px',
                     'width': '300px',}
 
+#Poblaciones
+df_poblaciones=pd.read_csv('datasets/poblaciones.csv',usecols=['Name','lon','lat','outputSRTM1'])
+Poblaciones = go.Scatter3d(
+    x=df_poblaciones['lon'],
+    y=df_poblaciones['lat'],
+    z=df_poblaciones['outputSRTM1']+10, #Conseguir alturas
+    mode='markers',
+    name="Población",
+    marker_symbol='square',
+    hovertemplate =df_poblaciones['Name'],
+    marker=dict(
+        size=6,
+        color='red'
+    ),
+    textposition="bottom right"
+)
+Pobl=[]
+for name,lon,lat,alt in zip(df_poblaciones['Name'],df_poblaciones['lon'],
+df_poblaciones['lat'],df_poblaciones['outputSRTM1']):
+    un=dict(
+            showarrow=False,
+            x=lon,
+            y=lat,
+            z=alt+10,
+            text=name,
+            xanchor="left",
+            xshift=10,
+            opacity=0.7,
+            font=dict(
+                color="black",
+                size=12
+            ))
+Pobl.append(un)
+
 #metricas a WGS84
 wgs84 = pyproj.Transformer.from_crs("epsg:9377", "epsg:4326")
 #WGS84 A Metricas
@@ -361,6 +395,8 @@ def update_output(pozo,Fecha,Hora,Minuto,Segundo,n_clicks):
         fig.update_layout(autosize=False,
                         width=850, height=725,
                         margin=dict(l=50, r=50, b=50, t=50),)
+        fig.add_trace(Poblaciones)
+
         fig.update_layout(
                 scene=dict(
                 annotations=[dict(
@@ -382,6 +418,9 @@ def update_output(pozo,Fecha,Hora,Minuto,Segundo,n_clicks):
                 yaxis = dict(title='Y',nticks=10, range=[gs,gn],),
                 zaxis = dict(title='Elevación(msnm)',nticks=10, range=[-32000,6000],),),)
         fig.update_traces(showlegend=False)
+        fig.update_layout(
+            scene=dict(
+            annotations=Pobl))
         return fig
 
 @app.callback([dash.dependencies.Output('Table','data'),
